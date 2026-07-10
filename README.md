@@ -23,11 +23,19 @@ Without credentials you can still install `bkng` and explore the full command tr
 Requires Node.js >= 20.19.
 
 ```bash
+# One-liner: install straight from GitHub (builds on install)
+npm install -g github:WYSIATI/booking-cli
+```
+
+Or work from a clone:
+
+```bash
 git clone https://github.com/WYSIATI/booking-cli.git && cd booking-cli
-npm install
-npm run build
+npm install     # builds dist/ via the prepare script
 npm link        # exposes `bkng` and `bkng-mcp` globally
 ```
+
+Wiring it into an AI agent instead? Jump to the [one-liner MCP setup](#one-liner-setup).
 
 ```bash
 bkng --help
@@ -107,13 +115,25 @@ Always run `orders preview` first and confirm the final price before creating.
 
 `bkng-mcp` is an [MCP](https://modelcontextprotocol.io) server speaking stdio. It exposes every registry operation as a tool (`accommodations_search`, `orders_preview`, ...) with the same zod input schemas the CLI validates against — humans and agents hit an identical surface.
 
-Example client config (Claude Desktop or any MCP host):
+### One-liner setup
+
+No clone, no npm publish needed — `npx` installs and builds straight from GitHub:
+
+```bash
+# Claude Code
+claude mcp add booking \
+  -e BOOKING_API_KEY=your-api-key -e BOOKING_AFFILIATE_ID=your-affiliate-id \
+  -- npx -y -p github:WYSIATI/booking-cli bkng-mcp
+```
+
+Any other MCP host (Claude Desktop, Cursor, ...) — starting-point config:
 
 ```json
 {
   "mcpServers": {
     "booking": {
-      "command": "bkng-mcp",
+      "command": "npx",
+      "args": ["-y", "-p", "github:WYSIATI/booking-cli", "bkng-mcp"],
       "env": {
         "BOOKING_API_KEY": "your-api-key",
         "BOOKING_AFFILIATE_ID": "your-affiliate-id"
@@ -122,6 +142,8 @@ Example client config (Claude Desktop or any MCP host):
   }
 }
 ```
+
+The first invocation builds the package (slower); after that it starts from the npx cache. If you installed globally (`npm install -g github:WYSIATI/booking-cli`), replace the command with plain `bkng-mcp`. All configuration is environment variables — see [`.env.example`](.env.example) for the full list (`BOOKING_API_BASE_URL`, `BOOKING_HTTP_TIMEOUT_MS`, `BOOKING_CLI_SECRET`).
 
 Tool annotations do the safety work:
 

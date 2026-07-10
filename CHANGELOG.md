@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `+book` asks for interactive confirmation on a terminal after showing the previewed total; `--yes` remains the non-interactive path and piped runs stay preview-only.
 - Unit test suite with a coverage gate.
 - CI workflow across Node 20, 22, and 24, including lint and format checks.
+- One-liner install and MCP setup straight from GitHub (`npx -y -p github:WYSIATI/booking-cli bkng-mcp`), enabled by a `prepare` script that builds on install.
 
 ### Changed
 
