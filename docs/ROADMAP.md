@@ -93,7 +93,8 @@ access.
 - [ ] MCP polish: server `instructions` describing the preview-before-create convention;
       document configs for common hosts (Claude Desktop, Claude Code, others).
 - [ ] Shell completion (`bkng completion`) via commander; `--help` audit across the tree.
-- [ ] Issue/PR templates; enable dependency and security scanning (Dependabot/audit in CI).
+- [x] Issue/PR templates. (Dependency automation was evaluated and deliberately removed —
+      dependencies are managed manually; run `npm audit` / `npm outdated` before releases.)
 
 **Exit criteria:** `npm i -g booking-cli` works for a stranger; releases are reproducible and
 documented; agents can be pointed at `bkng-mcp` with copy-paste config.
