@@ -61,8 +61,9 @@ Ergonomic `+`-prefixed helpers wrap common flows with friendly flags, so you don
 # Search stays with simple flags
 bkng +find-hotel --city-id 2140479 --checkin 2026-08-01 --checkout 2026-08-03 --adults 2
 
-# End-to-end booking: runs `orders preview`, shows the final total,
-# and only proceeds to `orders create` when you confirm with --yes
+# End-to-end booking: runs `orders preview`, shows the final total, then asks for
+# confirmation on a terminal (pass --yes for scripts/agents/CI). If your body has no
+# order_reference, +book generates a `bkng-` one (idempotency key) and prints it.
 bkng +book --file ./order.json --yes
 ```
 
