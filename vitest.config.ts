@@ -8,11 +8,12 @@ import { defineConfig } from 'vitest/config'
  * XDG_CONFIG_HOME so the real user config is untouched.
  *
  * Coverage is scoped to modules that carry real logic: the stable domain +
- * core modules, plus the CLI logic modules (input parsing, table/money
- * formatting, and the +book preview-then-create flow). Thin wiring modules that
- * only assemble the CLI / MCP surface (index, commands, execute, auth,
- * mcp/server, output/helpers) are left out of the denominator so the numbers
- * reflect the code where correctness actually matters.
+ * core modules, the CLI logic modules (input parsing, table/money formatting,
+ * and the +book preview-then-create flow), and the CLI wiring modules
+ * (commands, execute, output) — the wiring carries the --yes write guard and
+ * the stdout/stderr output contract, so it belongs in the denominator. The
+ * remaining thin assembly modules (index, auth, helpers, mcp/server) stay out
+ * so the numbers reflect the code where correctness actually matters.
  */
 export default defineConfig({
   test: {
@@ -29,9 +30,14 @@ export default defineConfig({
         'src/core/credentials.ts',
         'src/core/config.ts',
         'src/core/http.ts',
+        'src/core/version.ts',
+        'src/mcp/build.ts',
         'src/cli/input.ts',
         'src/cli/format.ts',
         'src/cli/book.ts',
+        'src/cli/commands.ts',
+        'src/cli/execute.ts',
+        'src/cli/output.ts',
       ],
       thresholds: {
         lines: 80,
