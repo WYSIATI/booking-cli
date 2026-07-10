@@ -22,13 +22,13 @@ export interface ExecuteContext {
 
 export const executeOperation = async (
   operation: Operation,
-  ctx: ExecuteContext,
+  ctx: ExecuteContext
 ): Promise<void> => {
   if (operation.kind === 'write' && !ctx.yes) {
     throw new Error(
       `\`${operation.resource} ${operation.action}\` mutates a real booking and is refused ` +
         'without explicit confirmation. Re-run with --yes once you have verified the request ' +
-        '(run `orders preview` first).',
+        '(run `orders preview` first).'
     )
   }
 

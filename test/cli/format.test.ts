@@ -32,20 +32,20 @@ describe('extractTotal', () => {
   })
 
   it('accepts the currency_code / amount spelling', () => {
-    expect(
-      extractTotal({ order_total: { amount: '99.50', currency_code: 'GBP' } }),
-    ).toBe('GBP 99.50')
+    expect(extractTotal({ order_total: { amount: '99.50', currency_code: 'GBP' } })).toBe(
+      'GBP 99.50'
+    )
   })
 
   it('resolves one level of nesting in the amount object', () => {
-    expect(
-      extractTotal({ total: { value: { amount: 10, currency: 'USD' } } }),
-    ).toBe('USD 10')
+    expect(extractTotal({ total: { value: { amount: 10, currency: 'USD' } } })).toBe(
+      'USD 10'
+    )
   })
 
   it('reads a nested price_breakdown.gross_amount total', () => {
     expect(
-      extractTotal({ price_breakdown: { gross_amount: { value: 42, currency: 'CHF' } } }),
+      extractTotal({ price_breakdown: { gross_amount: { value: 42, currency: 'CHF' } } })
     ).toBe('CHF 42')
   })
 
@@ -75,8 +75,18 @@ describe('extractTotal', () => {
 describe('formatAsTable — accommodations layout', () => {
   it('renders the curated id/name/price/score table for search results', () => {
     const table = formatAsTable([
-      { id: 1, name: 'Grand Hotel', price: { value: 120, currency: 'EUR' }, review_score: 8.9 },
-      { id: 2, name: 'Budget Inn', price: { value: 60, currency: 'EUR' }, review_score: 7.1 },
+      {
+        id: 1,
+        name: 'Grand Hotel',
+        price: { value: 120, currency: 'EUR' },
+        review_score: 8.9,
+      },
+      {
+        id: 2,
+        name: 'Budget Inn',
+        price: { value: 60, currency: 'EUR' },
+        review_score: 7.1,
+      },
     ])
     const lines = table.split('\n')
     expect(lines[0].split(/ {2,}/)).toEqual(['id', 'name', 'price', 'score'])
@@ -107,9 +117,7 @@ describe('formatAsTable — accommodations layout', () => {
   })
 
   it('resolves review score from a nested reviews.score path', () => {
-    const table = formatAsTable([
-      { id: 3, name: 'Reviewed', reviews: { score: 9.4 } },
-    ])
+    const table = formatAsTable([{ id: 3, name: 'Reviewed', reviews: { score: 9.4 } }])
     expect(table).toContain('9.4')
   })
 
@@ -132,9 +140,7 @@ describe('formatAsTable — generic layout', () => {
   })
 
   it('caps generic tables at eight columns', () => {
-    const wide = Object.fromEntries(
-      Array.from({ length: 12 }, (_, i) => [`c${i}`, i]),
-    )
+    const wide = Object.fromEntries(Array.from({ length: 12 }, (_, i) => [`c${i}`, i]))
     const table = formatAsTable([wide])
     const headerCount = table.split('\n')[0].split(/\s+/).filter(Boolean).length
     expect(headerCount).toBe(8)

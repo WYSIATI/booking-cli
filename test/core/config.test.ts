@@ -63,13 +63,13 @@ describe('resolveConfig', () => {
 
     it('rejects a non-https base URL so credentials cannot be exfiltrated', async () => {
       await expect(
-        resolveConfig({ baseUrl: 'http://evil.example.com' }),
+        resolveConfig({ baseUrl: 'http://evil.example.com' })
       ).rejects.toBeInstanceOf(ConfigError)
     })
 
     it('rejects a malformed base URL', async () => {
       await expect(resolveConfig({ baseUrl: 'not a url' })).rejects.toBeInstanceOf(
-        ConfigError,
+        ConfigError
       )
     })
 

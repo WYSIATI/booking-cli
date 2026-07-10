@@ -42,7 +42,7 @@ const parse = (text: string, source: string): Record<string, unknown> => {
 }
 
 export const resolveBody = async (
-  inputs: BodyInputs,
+  inputs: BodyInputs
 ): Promise<Record<string, unknown>> => {
   if (inputs.file) {
     return parse(await readFile(inputs.file, 'utf8'), `file ${inputs.file}`)

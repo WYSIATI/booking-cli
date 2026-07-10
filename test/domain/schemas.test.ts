@@ -88,9 +88,7 @@ describe('AccommodationsAvailabilityInput (AvailabilityInput)', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues.map((i) => i.path.join('.'))).toContain(
-        'accommodation',
-      )
+      expect(result.error.issues.map((i) => i.path.join('.'))).toContain('accommodation')
     }
   })
 
@@ -144,9 +142,7 @@ describe('OrderCreateInput', () => {
     const result = OrderCreateInput.safeParse(withoutBooker)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues.map((i) => i.path.join('.'))).toContain(
-        'booker',
-      )
+      expect(result.error.issues.map((i) => i.path.join('.'))).toContain('booker')
     }
   })
 
@@ -154,9 +150,7 @@ describe('OrderCreateInput', () => {
     const result = OrderCreateInput.safeParse({ ...validOrder, products: [] })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues.map((i) => i.path.join('.'))).toContain(
-        'products',
-      )
+      expect(result.error.issues.map((i) => i.path.join('.'))).toContain('products')
     }
   })
 

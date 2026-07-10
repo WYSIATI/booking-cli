@@ -29,7 +29,7 @@ export const registerAuthCommands = (program: Command): void => {
       const affiliateId = globals.affiliateId ?? process.env.BOOKING_AFFILIATE_ID
       if (!apiKey || !affiliateId) {
         throw new ConfigError(
-          'Provide --api-key and --affiliate-id (or set BOOKING_API_KEY and BOOKING_AFFILIATE_ID).',
+          'Provide --api-key and --affiliate-id (or set BOOKING_API_KEY and BOOKING_AFFILIATE_ID).'
         )
       }
       const { encrypted } = await saveCredentials({ apiKey, affiliateId })
@@ -45,7 +45,7 @@ export const registerAuthCommands = (program: Command): void => {
     .action(async (_opts, command) => {
       const format = resolveOutputFormat(command.optsWithGlobals())
       const envConfigured = Boolean(
-        process.env.BOOKING_API_KEY && process.env.BOOKING_AFFILIATE_ID,
+        process.env.BOOKING_API_KEY && process.env.BOOKING_AFFILIATE_ID
       )
       let stored = null
       try {
@@ -59,7 +59,7 @@ export const registerAuthCommands = (program: Command): void => {
           stored_affiliate_id: stored?.affiliateId ?? null,
           credentials_file: credentialsLocation(),
         },
-        { format },
+        { format }
       )
     })
 

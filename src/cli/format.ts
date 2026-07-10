@@ -35,10 +35,7 @@ const getPath = (row: Record<string, unknown>, path: Path): unknown => {
 }
 
 /** First path that resolves to a present (non-null, non-empty) value. */
-const firstDefined = (
-  row: Record<string, unknown>,
-  paths: readonly Path[],
-): unknown => {
+const firstDefined = (row: Record<string, unknown>, paths: readonly Path[]): unknown => {
   for (const path of paths) {
     const value = getPath(row, path)
     if (value !== undefined && value !== null && value !== '') return value
@@ -178,12 +175,15 @@ const looksLikeAccommodations = (rows: readonly Record<string, unknown>[]): bool
 
 const renderTable = (headers: readonly string[], rows: readonly string[][]): string => {
   const widths = headers.map((header, column) =>
-    Math.max(header.length, ...rows.map((row) => (row[column] ?? '').length)),
+    Math.max(header.length, ...rows.map((row) => (row[column] ?? '').length))
   )
   const pad = (text: string, width: number): string =>
     text + ' '.repeat(Math.max(0, width - text.length))
   const line = (cells: readonly string[]): string =>
-    cells.map((value, column) => pad(value, widths[column] ?? value.length)).join('  ').trimEnd()
+    cells
+      .map((value, column) => pad(value, widths[column] ?? value.length))
+      .join('  ')
+      .trimEnd()
 
   const separator = widths.map((width) => '-'.repeat(width)).join('  ')
   return [line(headers), separator, ...rows.map(line)].join('\n')

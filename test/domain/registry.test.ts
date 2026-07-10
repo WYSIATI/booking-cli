@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  OPERATIONS,
-  findOperation,
-  resources,
-} from '../../src/domain/registry.js'
+import { OPERATIONS, findOperation, resources } from '../../src/domain/registry.js'
 
 /**
  * The registry is the single source of truth from which both the CLI command
@@ -58,7 +54,7 @@ describe('OPERATIONS invariants', () => {
 
   it('has exactly orders.create and orders.cancel as write operations', () => {
     const writes = OPERATIONS.filter((op) => op.kind === 'write').map(
-      (op) => `${op.resource}.${op.action}`,
+      (op) => `${op.resource}.${op.action}`
     )
     expect(new Set(writes)).toEqual(new Set(['orders.create', 'orders.cancel']))
   })

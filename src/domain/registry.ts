@@ -94,7 +94,8 @@ export const OPERATIONS: readonly Operation[] = [
   {
     resource: 'orders',
     action: 'create',
-    summary: 'Create a booking. Charges the payment method. Not idempotent-safe without a reference.',
+    summary:
+      'Create a booking. Charges the payment method. Not idempotent-safe without a reference.',
     method: 'POST',
     path: '/orders/create',
     input: OrderCreateInput,
@@ -120,10 +121,7 @@ export const OPERATIONS: readonly Operation[] = [
   },
 ]
 
-export const findOperation = (
-  resource: string,
-  action: string,
-): Operation | undefined =>
+export const findOperation = (resource: string, action: string): Operation | undefined =>
   OPERATIONS.find((op) => op.resource === resource && op.action === action)
 
 export const resources = (): readonly string[] =>

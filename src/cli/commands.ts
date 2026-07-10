@@ -12,9 +12,7 @@ import { resolveOutputFormat } from './output.js'
 
 export const registerOperationCommands = (program: Command): void => {
   for (const resource of resources()) {
-    const group = program
-      .command(resource)
-      .description(`Operations on ${resource}`)
+    const group = program.command(resource).description(`Operations on ${resource}`)
 
     for (const op of OPERATIONS.filter((o) => o.resource === resource)) {
       const cmd = group

@@ -113,7 +113,7 @@ describe('credentials store', () => {
         encrypted: true,
         affiliateId: AFFILIATE,
         apiKey: 'only:three:parts',
-      }),
+      })
     )
     await expect(loadCredentials()).rejects.toBeInstanceOf(ConfigError)
   })

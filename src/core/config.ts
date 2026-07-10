@@ -33,21 +33,23 @@ const requireValidBaseUrl = (url: string): string => {
   try {
     parsed = new URL(url)
   } catch {
-    throw new ConfigError(`Invalid API base URL: "${url}". Provide an absolute https URL.`)
+    throw new ConfigError(
+      `Invalid API base URL: "${url}". Provide an absolute https URL.`
+    )
   }
   if (parsed.protocol !== 'https:') {
     throw new ConfigError(
-      `Refusing to send credentials over a non-https base URL: "${url}".`,
+      `Refusing to send credentials over a non-https base URL: "${url}".`
     )
   }
   return url
 }
 
 export const resolveConfig = async (
-  overrides: ConfigOverrides = {},
+  overrides: ConfigOverrides = {}
 ): Promise<ResolvedConfig> => {
   const baseUrl = requireValidBaseUrl(
-    overrides.baseUrl ?? process.env.BOOKING_API_BASE_URL ?? DEFAULT_BASE_URL,
+    overrides.baseUrl ?? process.env.BOOKING_API_BASE_URL ?? DEFAULT_BASE_URL
   )
 
   const envKey = process.env.BOOKING_API_KEY
@@ -68,6 +70,6 @@ export const resolveConfig = async (
   throw new ConfigError(
     'No credentials found. Set BOOKING_API_KEY and BOOKING_AFFILIATE_ID, ' +
       'or run `bkng auth login`. Get keys from Partner Centre once approved as a ' +
-      'Managed Affiliate Partner: https://developers.booking.com/demand/docs/getting-started/prerequisites',
+      'Managed Affiliate Partner: https://developers.booking.com/demand/docs/getting-started/prerequisites'
   )
 }

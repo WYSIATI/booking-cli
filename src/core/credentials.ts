@@ -30,8 +30,7 @@ const configDir = (): string =>
 
 const credentialsPath = (): string => join(configDir(), 'credentials.json')
 
-const deriveKey = (secret: string, salt: Buffer): Buffer =>
-  scryptSync(secret, salt, 32)
+const deriveKey = (secret: string, salt: Buffer): Buffer => scryptSync(secret, salt, 32)
 
 const encrypt = (plaintext: string, secret: string): string => {
   const salt = randomBytes(16)
@@ -58,12 +57,14 @@ const decrypt = (payload: string, secret: string): string => {
       decipher.final(),
     ]).toString('utf8')
   } catch {
-    throw new ConfigError('Failed to decrypt credentials — is BOOKING_CLI_SECRET correct?')
+    throw new ConfigError(
+      'Failed to decrypt credentials — is BOOKING_CLI_SECRET correct?'
+    )
   }
 }
 
 export const saveCredentials = async (
-  creds: StoredCredentials,
+  creds: StoredCredentials
 ): Promise<{ encrypted: boolean }> => {
   const secret = process.env.BOOKING_CLI_SECRET
   const encrypted = Boolean(secret)
@@ -91,7 +92,7 @@ export const loadCredentials = async (): Promise<StoredCredentials | null> => {
   const secret = process.env.BOOKING_CLI_SECRET
   if (!secret) {
     throw new ConfigError(
-      'Stored credentials are encrypted but BOOKING_CLI_SECRET is not set.',
+      'Stored credentials are encrypted but BOOKING_CLI_SECRET is not set.'
     )
   }
   return { apiKey: decrypt(file.apiKey, secret), affiliateId: file.affiliateId }

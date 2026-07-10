@@ -15,9 +15,7 @@ describe('resolveBody', () => {
   const tempFiles: string[] = []
 
   afterEach(async () => {
-    await Promise.all(
-      tempFiles.map((f) => rm(f, { force: true, recursive: true })),
-    )
+    await Promise.all(tempFiles.map((f) => rm(f, { force: true, recursive: true })))
     tempFiles.length = 0
   })
 
@@ -32,17 +30,13 @@ describe('resolveBody', () => {
 
   it('rejects a JSON array (not an object)', async () => {
     await expect(resolveBody({ json: '[1, 2, 3]' })).rejects.toBeInstanceOf(
-      ValidationError,
+      ValidationError
     )
   })
 
   it('rejects a JSON primitive (not an object)', async () => {
-    await expect(resolveBody({ json: '"hello"' })).rejects.toBeInstanceOf(
-      ValidationError,
-    )
-    await expect(resolveBody({ json: 'null' })).rejects.toBeInstanceOf(
-      ValidationError,
-    )
+    await expect(resolveBody({ json: '"hello"' })).rejects.toBeInstanceOf(ValidationError)
+    await expect(resolveBody({ json: 'null' })).rejects.toBeInstanceOf(ValidationError)
   })
 
   it('rejects malformed JSON with a ValidationError naming the source', async () => {
