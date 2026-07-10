@@ -11,8 +11,9 @@ import prettier from 'eslint-config-prettier'
  *   2. @eslint/js recommended — baseline JS correctness rules.
  *   3. typescript-eslint recommended — TS-aware linting (parser + rules).
  *   4. Project rules + Node globals for all TypeScript sources.
- *   5. Test-file overrides (Vitest globals).
- *   6. eslint-config-prettier LAST — disables stylistic rules that would
+ *   5. src-only rules (no-console: stdout is reserved for machine payload).
+ *   6. Test-file overrides (Vitest globals).
+ *   7. eslint-config-prettier LAST — disables stylistic rules that would
  *      conflict with Prettier, so formatting is owned solely by Prettier.
  */
 export default tseslint.config(
@@ -40,6 +41,14 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+    },
+  },
+  {
+    // stdout is a machine-readable contract: all human-facing output must go
+    // through the stderr helpers, so raw console usage is banned in sources.
+    files: ['src/**/*.ts'],
+    rules: {
+      'no-console': 'error',
     },
   },
   {
