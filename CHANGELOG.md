@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit test suite with a coverage gate.
 - CI workflow across Node 20, 22, and 24, including lint and format checks.
 - One-liner install and MCP setup straight from GitHub (`npx -y -p github:WYSIATI/booking-cli bkng-mcp`), enabled by a `prepare` script that builds on install.
+- `bkng mcp-config`: provider-agnostic, self-configuring MCP setup — prints a ready-to-paste config for any host (generic `mcpServers`, `--client vscode`, `--client claude`), with `--server-name`, `--global` and `--with-env` variants.
 
 ### Changed
 

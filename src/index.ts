@@ -3,6 +3,7 @@ import { Command } from 'commander'
 import { registerOperationCommands } from './cli/commands.js'
 import { registerAuthCommands } from './cli/auth.js'
 import { registerHelperCommands } from './cli/helpers.js'
+import { registerMcpConfigCommand } from './cli/mcpConfig.js'
 import { printError, resolveOutputFormat } from './cli/output.js'
 import { VERSION } from './core/version.js'
 
@@ -33,6 +34,7 @@ const buildProgram = (): Command => {
   registerAuthCommands(program)
   registerOperationCommands(program)
   registerHelperCommands(program)
+  registerMcpConfigCommand(program)
   return program
 }
 

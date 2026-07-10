@@ -37,6 +37,7 @@ export default defineConfig({
         'src/cli/book.ts',
         'src/cli/commands.ts',
         'src/cli/execute.ts',
+        'src/cli/mcpConfig.ts',
         'src/cli/output.ts',
       ],
       thresholds: {

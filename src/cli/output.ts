@@ -29,6 +29,12 @@ const writeOut = (text: string): void => {
   process.stdout.write(text.endsWith('\n') ? text : `${text}\n`)
 }
 
+/**
+ * Write a raw, copy-paste-ready payload line to stdout (no JSON quoting).
+ * For payloads that are commands or snippets rather than data structures.
+ */
+export const writeRaw = (text: string): void => writeOut(text)
+
 const writeErr = (text: string): void => {
   process.stderr.write(text.endsWith('\n') ? text : `${text}\n`)
 }

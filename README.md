@@ -117,16 +117,12 @@ Always run `orders preview` first and confirm the final price before creating.
 
 ### One-liner setup
 
-No clone, no npm publish needed — `npx` installs and builds straight from GitHub:
+No clone, no npm publish needed — `npx` installs and builds straight from GitHub. The CLI is **self-configuring for any MCP host**: it prints its own ready-to-paste config.
 
 ```bash
-# Claude Code
-claude mcp add booking \
-  -e BOOKING_API_KEY=your-api-key -e BOOKING_AFFILIATE_ID=your-affiliate-id \
-  -- npx -y -p github:WYSIATI/booking-cli bkng-mcp
+# Any agent host — prints the mcpServers JSON block below
+npx -y -p github:WYSIATI/booking-cli bkng mcp-config
 ```
-
-Any other MCP host (Claude Desktop, Cursor, ...) — starting-point config:
 
 ```json
 {
@@ -143,7 +139,24 @@ Any other MCP host (Claude Desktop, Cursor, ...) — starting-point config:
 }
 ```
 
-The first invocation builds the package (slower); after that it starts from the npx cache. If you installed globally (`npm install -g github:WYSIATI/booking-cli`), replace the command with plain `bkng-mcp`. All configuration is environment variables — see [`.env.example`](.env.example) for the full list (`BOOKING_API_BASE_URL`, `BOOKING_HTTP_TIMEOUT_MS`, `BOOKING_CLI_SECRET`).
+Paste that into your host's MCP config — the same shape works for Claude Desktop, Cursor, Windsurf and Cline. Dialect and convenience flags:
+
+| Flag | Effect |
+|------|--------|
+| `--client vscode` | `.vscode/mcp.json` dialect (`servers` map, explicit `stdio` type) |
+| `--client claude` | prints a `claude mcp add ...` shell one-liner for Claude Code |
+| `--server-name <name>` | key under which the server is registered (default `booking`) |
+| `--global` | use the installed `bkng-mcp` binary (after `npm install -g`) instead of npx |
+| `--with-env` | embed `BOOKING_*` values from your current environment instead of placeholders |
+
+```bash
+# Claude Code, directly
+claude mcp add booking \
+  -e BOOKING_API_KEY=your-api-key -e BOOKING_AFFILIATE_ID=your-affiliate-id \
+  -- npx -y -p github:WYSIATI/booking-cli bkng-mcp
+```
+
+The first npx invocation builds the package (slower); after that it starts from the npx cache. All configuration is environment variables — see [`.env.example`](.env.example) for the full list (`BOOKING_API_BASE_URL`, `BOOKING_HTTP_TIMEOUT_MS`, `BOOKING_CLI_SECRET`).
 
 Tool annotations do the safety work:
 
