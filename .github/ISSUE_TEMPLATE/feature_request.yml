@@ -1,0 +1,70 @@
+name: Feature request
+description: Suggest a new capability or improvement for bkng.
+title: "feat: <short summary>"
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Please describe the problem first, then the solution you
+        have in mind. Concrete use cases help us prioritise.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and discussions and this is not a duplicate.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What are you trying to do, and why is it hard today?
+      placeholder: As a partner integrator, I want ... so that ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should bkng do? Sketch the command, flags, or MCP tool shape.
+      placeholder: |
+        bkng orders create -d '{...}' --yes
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change is this?
+      options:
+        - New Demand API operation (registry entry)
+        - New helper command (+ prefixed)
+        - CLI ergonomics / output
+        - MCP server behaviour
+        - Docs / examples
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed, and why you set them aside.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to contribute this?
+      options:
+        - "Yes, I can open a PR"
+        - "Yes, with guidance"
+        - "No, just proposing"
+    validations:
+      required: false

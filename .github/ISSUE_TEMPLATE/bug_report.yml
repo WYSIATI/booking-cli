@@ -1,0 +1,98 @@
+name: Bug report
+description: Report a defect in the bkng CLI or bkng-mcp server.
+title: "bug: <short summary>"
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill in the sections below.
+
+        **Never paste secrets.** Redact API keys, affiliate ids, tokens, and any real
+        booking or guest data before submitting. Prefer the `--json` error output, which
+        is designed to be safe to share.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am on the latest release (or `main`) and can still reproduce.
+          required: true
+        - label: I have removed all credentials and personal data from this report.
+          required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did it happen?
+      options:
+        - CLI (bkng)
+        - MCP server (bkng-mcp)
+        - Both
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command or tool call
+      description: The exact command or MCP tool invocation. Redact credentials.
+      placeholder: bkng accommodations search -d '{"city_id":2140479,"checkin":"2026-08-01","checkout":"2026-08-03"}'
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What actually happened, including the `--json` error output if any.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Output of `node --version` (must be >= 18.17).
+      placeholder: v20.11.1
+    validations:
+      required: true
+
+  - type: input
+    id: cli-version
+    attributes:
+      label: bkng version
+      description: Output of `bkng --version`, or the commit SHA if running from source.
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 15.5 / Ubuntu 24.04 / Windows 11
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Logs, screenshots, or anything else that helps. Redact secrets.
+    validations:
+      required: false

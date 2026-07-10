@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/WYSIATI/booking-cli/security/advisories/new
+    about: Please disclose security issues privately here — do not open a public issue.
+  - name: Questions & ideas
+    url: https://github.com/WYSIATI/booking-cli/discussions
+    about: Ask a question or discuss an idea before filing an issue.
+  - name: Booking.com Demand API docs
+    url: https://developers.booking.com/demand/docs/getting-started/prerequisites
+    about: Official prerequisites and endpoint reference (partner access required).
