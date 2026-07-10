@@ -95,6 +95,9 @@ let stdout: string[]
 let stderr: string[]
 
 beforeEach(() => {
+  // Module-level mocks (readline question/close) accumulate call state across
+  // tests unless cleared explicitly — vitest no longer masks this.
+  vi.clearAllMocks()
   stdout = []
   stderr = []
   mockFindOperation.mockImplementation(actualRegistry.findOperation)

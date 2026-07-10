@@ -47,12 +47,8 @@ export const registerAuthCommands = (program: Command): void => {
       const envConfigured = Boolean(
         process.env.BOOKING_API_KEY && process.env.BOOKING_AFFILIATE_ID
       )
-      let stored = null
-      try {
-        stored = await loadCredentials()
-      } catch {
-        stored = null
-      }
+      // Encrypted-without-secret throws; status reporting treats that as "none".
+      const stored = await loadCredentials().catch(() => null)
       printResult(
         {
           env_configured: envConfigured,
