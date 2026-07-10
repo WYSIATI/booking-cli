@@ -2,12 +2,14 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ResolvedConfig } from '../../src/core/config.js'
 import { callOperation } from '../../src/core/http.js'
 import { findOperation } from '../../src/domain/registry.js'
+import type { Operation } from '../../src/domain/registry.js'
 import { ApiError, ValidationError } from '../../src/core/errors.js'
 
 /**
  * The HTTP client is tested against a stubbed global `fetch` — no request ever
  * leaves the process. We assert it validates input first, attaches the auth
- * headers, POSTs JSON to baseUrl + path, and normalises failures into ApiError.
+ * headers, POSTs JSON to baseUrl + path, applies the request timeout, and
+ * normalises failures (network errors, aborts, timeouts) into ApiError.
  */
 
 const CONFIG: ResolvedConfig = {
@@ -44,13 +46,16 @@ const stubFetch = (impl: ReturnType<typeof vi.fn>): void => {
 describe('callOperation', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
     vi.restoreAllMocks()
   })
 
   it('POSTs JSON with auth headers to baseUrl + path and returns the parsed body', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      fakeResponse({ ok: true, status: 200, body: JSON.stringify({ results: [1, 2] }) }),
-    )
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        fakeResponse({ ok: true, status: 200, body: JSON.stringify({ results: [1, 2] }) })
+      )
     stubFetch(fetchMock)
 
     const result = await callOperation(searchOp, validSearchBody, CONFIG)
@@ -76,16 +81,16 @@ describe('callOperation', () => {
     const fetchMock = vi.fn()
     stubFetch(fetchMock)
 
-    await expect(
-      callOperation(searchOp, { city_id: 20 }, CONFIG),
-    ).rejects.toBeInstanceOf(ValidationError)
+    await expect(callOperation(searchOp, { city_id: 20 }, CONFIG)).rejects.toBeInstanceOf(
+      ValidationError
+    )
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('surfaces the zod issues on the thrown ValidationError', async () => {
     stubFetch(vi.fn())
     await expect(
-      callOperation(searchOp, { checkin: 'bad' }, CONFIG),
+      callOperation(searchOp, { checkin: 'bad' }, CONFIG)
     ).rejects.toMatchObject({
       code: 'VALIDATION_ERROR',
       issues: expect.arrayContaining([expect.stringContaining('checkin')]),
@@ -94,7 +99,11 @@ describe('callOperation', () => {
 
   it('maps a non-2xx response to ApiError with status and body', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      fakeResponse({ ok: false, status: 404, body: JSON.stringify({ error: 'not found' }) }),
+      fakeResponse({
+        ok: false,
+        status: 404,
+        body: JSON.stringify({ error: 'not found' }),
+      })
     )
     stubFetch(fetchMock)
 
@@ -120,9 +129,11 @@ describe('callOperation', () => {
   })
 
   it('falls back to a { raw } wrapper when the body is not JSON', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      fakeResponse({ ok: true, status: 200, body: 'plain text, not json' }),
-    )
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        fakeResponse({ ok: true, status: 200, body: 'plain text, not json' })
+      )
     stubFetch(fetchMock)
 
     const result = await callOperation(searchOp, validSearchBody, CONFIG)
@@ -144,8 +155,108 @@ describe('callOperation', () => {
     // rather than throwing a TypeError inside safeParse.
     const previewOp = findOperation('orders', 'preview')!
     stubFetch(vi.fn())
-    await expect(
-      callOperation(previewOp, null, CONFIG),
-    ).rejects.toBeInstanceOf(ValidationError)
+    await expect(callOperation(previewOp, null, CONFIG)).rejects.toBeInstanceOf(
+      ValidationError
+    )
   })
+
+  it('sends no request body for GET operations', async () => {
+    // The registry is POST-only today, so exercise the GET branch with a
+    // synthetic copy of a real operation.
+    const getOp: Operation = { ...searchOp, method: 'GET' }
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(fakeResponse({ ok: true, status: 200, body: '{}' }))
+    stubFetch(fetchMock)
+
+    await callOperation(getOp, validSearchBody, CONFIG)
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(init.method).toBe('GET')
+    expect(init.body).toBeUndefined()
+  })
+
+  it('stringifies a non-Error fetch rejection into the network ApiError message', async () => {
+    const fetchMock = vi.fn().mockRejectedValue('socket hang up')
+    stubFetch(fetchMock)
+
+    const promise = callOperation(searchOp, validSearchBody, CONFIG)
+    await expect(promise).rejects.toBeInstanceOf(ApiError)
+    await expect(promise).rejects.toMatchObject({
+      status: 0,
+      message: expect.stringContaining('socket hang up'),
+    })
+  })
+
+  it('passes an AbortSignal to fetch so a stalled connection cannot hang forever', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(fakeResponse({ ok: true, status: 200, body: '{}' }))
+    stubFetch(fetchMock)
+
+    await callOperation(searchOp, validSearchBody, CONFIG)
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(init.signal).toBeInstanceOf(AbortSignal)
+  })
+
+  it('maps a fetch timeout to ApiError with status 0 and the default 30000ms in the message', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValue(new DOMException('The operation timed out', 'TimeoutError'))
+    stubFetch(fetchMock)
+
+    const promise = callOperation(searchOp, validSearchBody, CONFIG)
+    await expect(promise).rejects.toBeInstanceOf(ApiError)
+    await expect(promise).rejects.toMatchObject({
+      code: 'API_ERROR',
+      status: 0,
+      message: expect.stringContaining(
+        'Request to /accommodations/search timed out after 30000ms'
+      ),
+    })
+  })
+
+  it('maps an AbortError rejection to the same timeout ApiError', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValue(new DOMException('This operation was aborted', 'AbortError'))
+    stubFetch(fetchMock)
+
+    const promise = callOperation(searchOp, validSearchBody, CONFIG)
+    await expect(promise).rejects.toBeInstanceOf(ApiError)
+    await expect(promise).rejects.toMatchObject({
+      status: 0,
+      message: expect.stringContaining('timed out after 30000ms'),
+    })
+  })
+
+  it('respects a BOOKING_HTTP_TIMEOUT_MS override', async () => {
+    vi.stubEnv('BOOKING_HTTP_TIMEOUT_MS', '5000')
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValue(new DOMException('The operation timed out', 'TimeoutError'))
+    stubFetch(fetchMock)
+
+    await expect(callOperation(searchOp, validSearchBody, CONFIG)).rejects.toMatchObject({
+      message: expect.stringContaining('timed out after 5000ms'),
+    })
+  })
+
+  it.each(['garbage', '-100', '0', '1.5', ''])(
+    'falls back to the default timeout when BOOKING_HTTP_TIMEOUT_MS is %j',
+    async (value) => {
+      vi.stubEnv('BOOKING_HTTP_TIMEOUT_MS', value)
+      const fetchMock = vi
+        .fn()
+        .mockRejectedValue(new DOMException('The operation timed out', 'TimeoutError'))
+      stubFetch(fetchMock)
+
+      await expect(
+        callOperation(searchOp, validSearchBody, CONFIG)
+      ).rejects.toMatchObject({
+        message: expect.stringContaining('timed out after 30000ms'),
+      })
+    }
+  )
 })

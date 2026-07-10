@@ -4,6 +4,7 @@ import { registerOperationCommands } from './cli/commands.js'
 import { registerAuthCommands } from './cli/auth.js'
 import { registerHelperCommands } from './cli/helpers.js'
 import { printError, resolveOutputFormat } from './cli/output.js'
+import { VERSION } from './core/version.js'
 
 /**
  * `bkng` — one CLI for the Booking.com Demand API, built for humans and AI agents.
@@ -17,11 +18,14 @@ const buildProgram = (): Command => {
   program
     .name('bkng')
     .description(
-      'Unofficial CLI for the Booking.com Demand API — for humans and AI agents.',
+      'Unofficial CLI for the Booking.com Demand API — for humans and AI agents.'
     )
-    .version('0.1.0')
+    .version(VERSION)
     .option('--json', 'Emit a machine-readable { ok, data } envelope on stdout')
-    .option('--table', 'Render results as aligned text tables (ignored when --json is set)')
+    .option(
+      '--table',
+      'Render results as aligned text tables (ignored when --json is set)'
+    )
     .option('--affiliate-id <id>', 'Override the affiliate id for this call')
     .option('--base-url <url>', 'Override the API base URL (e.g. sandbox)')
     .showHelpAfterError()
