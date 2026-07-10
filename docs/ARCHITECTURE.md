@@ -5,7 +5,7 @@ single definition: as a CLI (`bkng`) for humans and scripts, and as an MCP serve
 for AI agents. This document describes how that works, why it is shaped this way, and where to
 extend it.
 
-- Language/runtime: TypeScript (strict), ESM + NodeNext, Node >= 18.17
+- Language/runtime: TypeScript (strict), ESM + NodeNext, Node >= 20.19
 - Dependencies: `commander` (CLI), `zod` (validation), `@modelcontextprotocol/sdk` (MCP)
 - Build: `tsc` only — no bundler, no codegen step (yet; see [Extension points](#extension-points))
 

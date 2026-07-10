@@ -39,7 +39,7 @@ core behaviour is covered by fast, offline unit tests.
       `no-console` (error) as the mechanical backstop for the stdout contract, import-order,
       immutability-friendly rules; `npm run lint` / `lint:fix`.
 - [ ] GitHub Actions CI: on push/PR — `npm ci`, typecheck, lint, format check, build, tests +
-      coverage gate, on a Node version matrix (18.17, 20, 22). No secrets required (tests are
+      coverage gate, on a Node version matrix (20, 22, 24). No secrets required (tests are
       offline by design).
 - [ ] Contributor docs: `CONTRIBUTING.md` (setup, test/lint commands, how to add an operation —
       linking to ARCHITECTURE.md §6, PR expectations, conventional commits) and a minimal

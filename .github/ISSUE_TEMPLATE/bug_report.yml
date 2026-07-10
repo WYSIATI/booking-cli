@@ -67,7 +67,7 @@ body:
     id: node-version
     attributes:
       label: Node.js version
-      description: Output of `node --version` (must be >= 18.17).
+      description: Output of `node --version` (must be >= 20.19).
       placeholder: v20.11.1
     validations:
       required: true

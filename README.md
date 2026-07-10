@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/WYSIATI/booking-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/WYSIATI/booking-cli/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Node.js >= 18.17](https://img.shields.io/badge/node-%3E%3D18.17-brightgreen.svg)](package.json)
+[![Node.js >= 20.19](https://img.shields.io/badge/node-%3E%3D20.19-brightgreen.svg)](package.json)
 
 One unified command surface over the Booking.com **Demand API**: search stays, check availability, read reviews, preview and create orders — from your terminal, your scripts, or any MCP-capable AI agent. Every operation is defined once in a registry and exposed twice: as a `bkng` CLI command and as a `bkng-mcp` tool.
 
@@ -20,7 +20,7 @@ Without credentials you can still install `bkng` and explore the full command tr
 
 ## Quickstart
 
-Requires Node.js >= 18.17.
+Requires Node.js >= 20.19.
 
 ```bash
 git clone https://github.com/WYSIATI/booking-cli.git && cd booking-cli

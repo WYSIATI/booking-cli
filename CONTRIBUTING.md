@@ -4,7 +4,7 @@ Thanks for your interest in improving `bkng`. This document covers everything yo
 
 ## Development setup
 
-Prerequisites: **Node.js >= 18.17** and npm.
+Prerequisites: **Node.js >= 20.19** and npm.
 
 ```bash
 git clone https://github.com/WYSIATI/booking-cli.git && cd booking-cli

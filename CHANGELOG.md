@@ -18,9 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `+book` generates an idempotent `order_reference` (`bkng-<uuid>`) when the order body has none, guarding against duplicate bookings on retry.
 - `+book` asks for interactive confirmation on a terminal after showing the previewed total; `--yes` remains the non-interactive path and piped runs stay preview-only.
 - Unit test suite with a coverage gate.
-- CI workflow across Node 18, 20, and 22, including lint and format checks.
+- CI workflow across Node 20, 22, and 24, including lint and format checks.
 
 ### Changed
 
+- Minimum supported Node.js is now 20.19 — Node 18 reached end-of-life in
+  April 2025 and the upgraded toolchain (ESLint 10, Vitest 4) no longer runs
+  on it. The CI matrix covers Node 20, 22, and 24.
 - CLI and MCP server version is single-sourced from `package.json`.
 - MCP server construction split into an importable module (`src/mcp/build.ts`), making the tool surface unit-testable.
