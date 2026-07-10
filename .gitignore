@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+*.log
+.env
+.env.local
+# Never commit resolved credentials
+credentials.json
+.DS_Store
